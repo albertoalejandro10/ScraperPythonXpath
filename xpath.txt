@@ -1,0 +1,7 @@
+links = //li[@class="item pages-item-next"]/a/@href LINK PARA LA PAGINACION
+
+links = '//strong/a/text()'  PARA LOS TITULOS
+
+links = '//div[@class="short_description"]/p/text()' //Para la descripcion
+
+links = '//div[@class="price_ammount"]/text()' // Para el precio
