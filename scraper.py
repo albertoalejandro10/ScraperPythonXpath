@@ -91,11 +91,11 @@ def parse_home():
 
             conectar = conn.cursor()
 
-            # cur.execute("""CREATE TABLE FRUITS (
-            #         titulos         TEXT,
-            #         descripciones   TEXT,
-            #         precios         TEXT
-            # )""")
+            conectar.execute("""CREATE TABLE products (
+                    titulos         TEXT,
+                    descripciones   TEXT,
+                    precios         TEXT
+            )""")
 
             try:
                 contar = 0
