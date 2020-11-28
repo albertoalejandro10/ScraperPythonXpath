@@ -1,5 +1,4 @@
-import pandas as pd
-import numpy as np
+# import pandas as pd
 import lxml.html as html
 import requests
 import psycopg2
@@ -70,9 +69,10 @@ def parse_home():
             # Suma entre arreglos 1 y arreglo 2 de precios
             array_total_prices = array_prices_without_pagination + array_prices_with_pagination
 
-            datos = {'titulos': array_total_titles,
-                     'descripcion': array_total_summary, 'precios': array_total_prices}            
 
+                #DATAFRAME: ESTABLECIA TODOS LOS DATOS EN UN CONJUNTO DE DATOS ORGANIZADOS
+            # datos = {'titulos': array_total_titles,
+            #          'descripcion': array_total_summary, 'precios': array_total_prices}            
             # df = pd.DataFrame(data=datos)
             #print(df)
 
@@ -124,6 +124,3 @@ def run():
 
 if __name__ == '__main__':
     run()
-
-
-# Server=localhost\SQLEXPRESS01;Database=master;Trusted_Connection=True;
