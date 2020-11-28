@@ -1,7 +1,8 @@
-import requests
-import lxml.html as html
-import numpy as np
 import pandas as pd
+import numpy as np
+import lxml.html as html
+import requests
+import psycopg2
 
 HOME_URL = 'https://garminstore.cl/wearables/productos/todos.html'
 XPATH_LINK_TO_PAGINATION = '//li[@class="item pages-item-next"]/a/@href'
@@ -69,12 +70,49 @@ def parse_home():
             # Suma entre arreglos 1 y arreglo 2 de precios
             array_total_prices = array_prices_without_pagination + array_prices_with_pagination
 
-            df = pd.DataFrame({'Titulos': array_total_titles, 'Descripcion': array_total_summary,
-                               'Precios': array_total_prices})
-            print(df)
+            datos = {'titulos': array_total_titles,
+                     'descripcion': array_total_summary, 'precios': array_total_prices}            
+
+            # df = pd.DataFrame(data=datos)
+            #print(df)
+
+            array_prices_numbers = []
+            for item in array_total_prices:
+                iterator = item.replace('.', '')
+                array_prices_numbers.append(iterator)
+
+            dbname = 'products'
+            host = 'localhost'
+            port = '5432'
+            user = 'postgres'
+            pwd = '1234'
+
+            conn = psycopg2.connect(dbname=dbname, host=host, port=port, user=user, password=pwd)
+
+            conectar = conn.cursor()
+
+            # cur.execute("""CREATE TABLE FRUITS (
+            #         titulos         TEXT,
+            #         descripciones   TEXT,
+            #         precios         TEXT
+            # )""")
+
+            try:
+                contar = 0
+                for e in range(len(array_total_titles)):
+                    conectar.execute("""INSERT INTO products(titulos, descripciones, precios) VALUES ( """ + "'" + array_total_titles[contar] + "'" + ',' + "'" + array_total_summary[contar] + "'" + ',' + "'" + array_prices_numbers[contar] + "'" + """ ) """)
+                    contar = contar + 1
+                    print("Envio de datos, exitoso")
+            except:
+                print("Error al enviar lo datos al servidor PostgreSQL")
+
+            conn.commit()
+            conn.close()
+
+            conectar.close()
 
         else:
-            raise ValueError(f'Error: {response.status_code}')
+            raise ValueError(f'Error:{response.status_code}')
 
     except ValueError as ve:
         print(ve)
@@ -86,3 +124,6 @@ def run():
 
 if __name__ == '__main__':
     run()
+
+
+# Server=localhost\SQLEXPRESS01;Database=master;Trusted_Connection=True;
